@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Face Trainer</title>
+</head>
+<body style="font-family: Arial; padding: 20px;">
+  <h2>🧠 Face Training Form</h2>
+
+  <form id="trainForm" enctype="multipart/form-data" method="post">
+    <label>ID:</label><br>
+    <input type="number" name="person_id" required><br><br>
+
+    <label>Name:</label><br>
+    <input type="text" name="name" required><br><br>
+
+    <label>Upload up to 5 images:</label><br>
+    <input type="file" name="files" multiple required accept="image/*"><br><br>
+
+    <button type="submit">Train Face</button>
+  </form>
+
+  <h3 id="result"></h3>
+
+  <script>
+    const form = document.getElementById('trainForm');
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const formData = new FormData(form);
+      
+      const response = await fetch('http://127.0.0.1:8000/train/', {
+        method: 'POST',
+        body: formData
+      });
+
+      const result = await response.json();
+      document.getElementById('result').innerText = JSON.stringify(result);
+    });
+  </script>
+</body>
+</html>

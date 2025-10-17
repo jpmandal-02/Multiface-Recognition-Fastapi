@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Face Recognition</title>
+</head>
+<body style="font-family: Arial; padding: 20px;">
+  <h2>📸 Face Recognition</h2>
+
+  <form id="recognizeForm" enctype="multipart/form-data" method="post">
+    <label>Upload Group Image:</label><br>
+    <input type="file" name="file" accept="image/*" required><br><br>
+
+    <button type="submit">Recognize Faces</button>
+  </form>
+
+  <h3 id="status"></h3>
+  <div id="result" style="margin-top: 20px;"></div>
+
+  <script>
+    const form = document.getElementById('recognizeForm');
+    const status = document.getElementById('status');
+    const resultDiv = document.getElementById('result');
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      status.textContent = "Processing... Please wait ⏳";
+      resultDiv.innerHTML = "";
+
+      const formData = new FormData(form);
+
+      try {
+        const response = await fetch("http://127.0.0.1:8000/recognize/", {
+          method: "POST",
+          body: formData
+        });
+
+        if (!response.ok) {
+          status.textContent = "❌ Recognition failed!";
+          return;
+        }
+
+        const blob = await response.blob();
+        const imgUrl = URL.createObjectURL(blob);
+        status.textContent = "✅ Recognition complete!";
+        resultDiv.innerHTML = `<img src="${imgUrl}" style="max-width: 80%; border: 2px solid #ccc; border-radius: 8px;">`;
+      } catch (err) {
+        status.textContent = "⚠️ Error: " + err.message;
+      }
+    });
+  </script>
+</body>
+</html>
