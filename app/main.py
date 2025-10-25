@@ -19,7 +19,7 @@ encoder = FaceEncoder()
 @app.get("/", response_class=HTMLResponse)
 async def home(request: Request):
     return templates.TemplateResponse("train.html", {"request": request})
-@app.post("/")
+@app.post("/train/")
 async def train_person(
     person_id: int = Form(...),
     name: str = Form(...),
@@ -88,7 +88,7 @@ async def recognize_faces(file: UploadFile = File(...)):
 
         x1, y1, x2, y2 = map(int, face.bbox)
         cv2.rectangle(img, (x1, y1), (x2, y2), (0, 255, 0), 2)
-        cv2.putText(img, f"{name} ({max_sim:.2f})", (x1, y1 - 10),
+        cv2.putText(img, f"{name}", (x1, y1 - 10),
                     cv2.FONT_HERSHEY_SIMPLEX, 0.8, (0, 255, 0), 2)
 
     # Save result image temporarily

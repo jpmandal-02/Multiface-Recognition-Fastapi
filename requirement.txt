@@ -1,0 +1,8 @@
+fastapi
+uvicorn
+insightface
+opencv-python
+numpy
+sqlalchemy
+jinja2
+onnxruntime-gpu

@@ -4,19 +4,138 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Face Recognition</title>
+  <style>
+    body {
+      font-family: "Poppins", Arial, sans-serif;
+      background: linear-gradient(135deg, #0f172a, #1e293b);
+      color: #f8fafc;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+      padding: 20px;
+    }
+
+    .container {
+      background: rgba(255, 255, 255, 0.08);
+      backdrop-filter: blur(10px);
+      border-radius: 20px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+      width: 100%;
+      max-width: 460px;
+      padding: 30px;
+      text-align: center;
+      animation: fadeIn 0.6s ease;
+    }
+
+    h2 {
+      font-size: 24px;
+      color: #38bdf8;
+      margin-bottom: 20px;
+    }
+
+    label {
+      display: block;
+      text-align: left;
+      margin-bottom: 6px;
+      font-weight: 600;
+      color: #e2e8f0;
+    }
+
+    input[type="file"] {
+      width: 100%;
+      padding: 10px;
+      border: none;
+      border-radius: 10px;
+      background: rgba(255,255,255,0.1);
+      color: #f1f5f9;
+      font-size: 15px;
+      margin-bottom: 16px;
+      transition: all 0.3s ease;
+    }
+
+    input[type="file"]:focus {
+      outline: none;
+      background: rgba(255,255,255,0.2);
+    }
+
+    button {
+      background: linear-gradient(90deg, #3b82f6, #06b6d4);
+      color: white;
+      font-weight: bold;
+      border: none;
+      border-radius: 12px;
+      padding: 12px 20px;
+      font-size: 16px;
+      cursor: pointer;
+      width: 100%;
+      transition: all 0.3s ease;
+    }
+
+    button:hover {
+      background: linear-gradient(90deg, #2563eb, #0891b2);
+      transform: scale(1.03);
+    }
+
+    #status {
+      margin-top: 18px;
+      font-size: 15px;
+      color: #94a3b8;
+    }
+
+    #result {
+      margin-top: 20px;
+    }
+
+    #result img {
+      max-width: 90%;
+      border-radius: 12px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.4);
+      border: 1px solid rgba(255,255,255,0.1);
+      transition: transform 0.3s ease;
+    }
+
+    #result img:hover {
+      transform: scale(1.02);
+    }
+
+    .nav-link {
+      margin-top: 20px;
+      display: inline-block;
+      color: #38bdf8;
+      text-decoration: none;
+      font-weight: 600;
+      transition: 0.3s;
+    }
+
+    .nav-link:hover {
+      color: #7dd3fc;
+      text-decoration: underline;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
 </head>
-<body style="font-family: Arial; padding: 20px;">
-  <h2>📸 Face Recognition</h2>
+<body>
+  <div class="container">
+    <h2>📸 Face Recognition</h2>
 
-  <form id="recognizeForm" enctype="multipart/form-data" method="post">
-    <label>Upload Group Image:</label><br>
-    <input type="file" name="file" accept="image/*" required><br><br>
+    <form id="recognizeForm" enctype="multipart/form-data" method="post">
+      <label>Upload Group Image:</label>
+      <input type="file" name="file" accept="image/*" required>
+      <button type="submit">Recognize Faces</button>
+    </form>
 
-    <button type="submit">Recognize Faces</button>
-  </form>
+    <h3 id="status"></h3>
+    <div id="result"></div>
 
-  <h3 id="status"></h3>
-  <div id="result" style="margin-top: 20px;"></div>
+    <a href="face_trainer.html" class="nav-link">⬅ Back to Face Trainer</a>
+  </div>
 
   <script>
     const form = document.getElementById('recognizeForm');
@@ -25,7 +144,7 @@
 
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
-      status.textContent = "Processing... Please wait ⏳";
+      status.textContent = "⏳ Processing... Please wait";
       resultDiv.innerHTML = "";
 
       const formData = new FormData(form);
@@ -44,7 +163,7 @@
         const blob = await response.blob();
         const imgUrl = URL.createObjectURL(blob);
         status.textContent = "✅ Recognition complete!";
-        resultDiv.innerHTML = `<img src="${imgUrl}" style="max-width: 80%; border: 2px solid #ccc; border-radius: 8px;">`;
+        resultDiv.innerHTML = `<img src="${imgUrl}" alt="Recognized Faces">`;
       } catch (err) {
         status.textContent = "⚠️ Error: " + err.message;
       }

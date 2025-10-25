@@ -4,39 +4,141 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Face Trainer</title>
+  <style>
+    body {
+      font-family: "Poppins", Arial, sans-serif;
+      background: linear-gradient(135deg, #1e293b, #0f172a);
+      color: #f8fafc;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+      padding: 20px;
+    }
+
+    .container {
+      background: rgba(255, 255, 255, 0.08);
+      backdrop-filter: blur(10px);
+      border-radius: 20px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+      width: 100%;
+      max-width: 420px;
+      padding: 30px;
+      text-align: center;
+      animation: fadeIn 0.6s ease;
+    }
+
+    h2 {
+      font-size: 24px;
+      color: #38bdf8;
+      margin-bottom: 20px;
+    }
+
+    label {
+      display: block;
+      text-align: left;
+      margin-bottom: 6px;
+      font-weight: 600;
+      color: #e2e8f0;
+    }
+
+    input[type="number"],
+    input[type="text"],
+    input[type="file"] {
+      width: 100%;
+      padding: 10px;
+      border: none;
+      border-radius: 10px;
+      background: rgba(255,255,255,0.1);
+      color: #f1f5f9;
+      font-size: 15px;
+      margin-bottom: 16px;
+      transition: all 0.3s ease;
+    }
+
+    input[type="number"]:focus,
+    input[type="text"]:focus,
+    input[type="file"]:focus {
+      outline: none;
+      background: rgba(255,255,255,0.2);
+    }
+
+    button {
+      background: linear-gradient(90deg, #3b82f6, #06b6d4);
+      color: white;
+      font-weight: bold;
+      border: none;
+      border-radius: 12px;
+      padding: 12px 20px;
+      font-size: 16px;
+      cursor: pointer;
+      width: 100%;
+      transition: all 0.3s ease;
+    }
+
+    button:hover {
+      background: linear-gradient(90deg, #2563eb, #0891b2);
+      transform: scale(1.03);
+    }
+
+    #result {
+      margin-top: 20px;
+      font-size: 14px;
+      word-wrap: break-word;
+      color: #94a3b8;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
 </head>
-<body style="font-family: Arial; padding: 20px;">
-  <h2>🧠 Face Training Form</h2>
+<body>
+  <div class="container">
+    <h2>🧠 Face Training Form</h2>
 
-  <form id="trainForm" enctype="multipart/form-data" method="post">
-    <label>ID:</label><br>
-    <input type="number" name="person_id" required><br><br>
+    <form id="trainForm" enctype="multipart/form-data" method="post">
+      <label>ID:</label>
+      <input type="number" name="person_id" required>
 
-    <label>Name:</label><br>
-    <input type="text" name="name" required><br><br>
+      <label>Name:</label>
+      <input type="text" name="name" required>
 
-    <label>Upload up to 5 images:</label><br>
-    <input type="file" name="files" multiple required accept="image/*"><br><br>
+      <label>Upload up to 5 images:</label>
+      <input type="file" name="files" multiple required accept="image/*">
 
-    <button type="submit">Train Face</button>
-  </form>
+      <button type="submit">Train Face</button>
+    </form>
 
-  <h3 id="result"></h3>
+    <h3 id="result"></h3>
+  </div>
 
   <script>
     const form = document.getElementById('trainForm');
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
       const formData = new FormData(form);
-      
-      const response = await fetch('http://127.0.0.1:8000/train/', {
-        method: 'POST',
-        body: formData
-      });
 
-      const result = await response.json();
-      document.getElementById('result').innerText = JSON.stringify(result);
+      document.getElementById('result').innerText = "⏳ Training in progress...";
+
+      try {
+        const response = await fetch('http://127.0.0.1:8000/train/', {
+          method: 'POST',
+          body: formData
+        });
+
+        const result = await response.json();
+        document.getElementById('result').innerText = 
+          "✅ " + JSON.stringify(result, null, 2);
+      } catch (err) {
+        document.getElementById('result').innerText = 
+          "❌ Error: " + err.message;
+      }
     });
   </script>
 </body>
 </html>
+
